@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>bootstrapped, berlin</title>
+  <meta name="description" content="A curated network for bootstrapped founders building in Berlin.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ============================
+       RESET & BASE
+       ============================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #0a0a0a;
+      --bg-secondary: #111111;
+      --bg-card: #f5f0eb;
+      --bg-card-accent: #ede6dd;
+      --text-primary: #e8e4e0;
+      --text-secondary: #9a9490;
+      --text-muted: #5a5550;
+      --text-dark: #1a1410;
+      --text-dark-secondary: #4a4440;
+      --accent: #c45a3c;
+      --accent-light: #d4713a;
+      --accent-glow: rgba(196, 90, 60, 0.15);
+      --header-bg: rgba(10, 10, 10, 0.85);
+      --header-border: rgba(255,255,255,0.04);
+      --input-bg: rgba(255,255,255,0.05);
+      --input-border: rgba(255,255,255,0.1);
+      --toggle-bg: rgba(255,255,255,0.05);
+      --toggle-active-bg: rgba(255,255,255,0.1);
+      --footer-border: rgba(255,255,255,0.04);
+      --audience-border: rgba(255,255,255,0.06);
+      --cursor-glow-color: rgba(196, 90, 60, 0.07);
+      --logo-noise-fg: #e8e4e0;
+      --logo-noise-bg: #0a0a0a;
+      --grain-opacity: 0.025;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', -apple-system, sans-serif;
+      --serif: 'Lora', Georgia, serif;
+    }
+
+    html[data-theme="light"] {
+      --bg-primary: #f5f0eb;
+      --bg-secondary: #ede6dd;
+      --bg-card: #1a1410;
+      --bg-card-accent: #252018;
+      --text-primary: #1a1410;
+      --text-secondary: #5a5550;
+      --text-muted: #9a9490;
+      --text-dark: #f5f0eb;
+      --text-dark-secondary: #d4cfc8;
+      --accent: #c45a3c;
+      --accent-light: #d4713a;
+      --accent-glow: rgba(196, 90, 60, 0.1);
+      --header-bg: rgba(245, 240, 235, 0.85);
+      --header-border: rgba(0,0,0,0.06);
+      --input-bg: rgba(0,0,0,0.04);
+      --input-border: rgba(0,0,0,0.12);
+      --toggle-bg: rgba(0,0,0,0.05);
+      --toggle-active-bg: rgba(0,0,0,0.1);
+      --footer-border: rgba(0,0,0,0.06);
+      --audience-border: rgba(0,0,0,0.08);
+      --cursor-glow-color: rgba(196, 90, 60, 0.12);
+      --logo-noise-fg: #1a1410;
+      --logo-noise-bg: #f5f0eb;
+      --grain-opacity: 0.02;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg-primary);
+      transition: background 5s cubic-bezier(0.25, 0, 0.25, 1);
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      transition: background 5s cubic-bezier(0.25, 0, 0.25, 1), color 5s cubic-bezier(0.25, 0, 0.25, 1);
+    }
+
+    /* Slow theme transition on all color-bearing elements */
+    .hero h1, .hero-sub, .hero-arrow,
+    .section-label, .problem h2, .problem-text, .problem-text p,
+    .manifesto-card h2, .manifesto-beliefs li,
+    .value h2, .value-item h3, .value-item p,
+    .audience h2, .criteria-item, .criteria-check,
+    .cta h2, .cta-sub, .waitlist-note, .form-success,
+    .logo-text, .logo-text span, .lang-btn,
+    footer p, .value-icon {
+      transition: color 5s cubic-bezier(0.25, 0, 0.25, 1), background 5s cubic-bezier(0.25, 0, 0.25, 1);
+    }
+
+    ::selection {
+      background: var(--accent);
+      color: var(--bg-primary);
+    }
+
+    /* ============================
+       LAYOUT
+       ============================ */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section {
+      padding: 140px 0;
+    }
+
+    /* ============================
+       HEADER / NAV
+       ============================ */
+    header {
+      position: fixed;
+      top: 12px;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 0;
+      background: transparent;
+      border-bottom: none;
+    }
+
+    .header-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      border-radius: 14px;
+    }
+
+    /* Glass background — fades in on scroll */
+    .header-inner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      background: var(--header-bg);
+      backdrop-filter: blur(24px) saturate(1.4);
+      -webkit-backdrop-filter: blur(24px) saturate(1.4);
+      border: 1px solid var(--header-border);
+      box-shadow:
+        0 2px 16px rgba(0,0,0,0.06),
+        0 0 0 0.5px rgba(255,255,255,0.04) inset;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.5s ease, background 5s cubic-bezier(0.25, 0, 0.25, 1), border-color 5s cubic-bezier(0.25, 0, 0.25, 1);
+    }
+
+    header.scrolled .header-inner::before {
+      opacity: 1;
+    }
+
+    html[data-theme="light"] .header-inner::before {
+      box-shadow:
+        0 2px 16px rgba(0,0,0,0.04),
+        0 0 0 0.5px rgba(0,0,0,0.03) inset;
+    }
+
+    /* Logo: noise sphere + text */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .logo-mark canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .logo-text {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+
+    .logo-text span {
+      color: var(--text-muted);
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lang-switch {
+      display: flex;
+      gap: 2px;
+      background: var(--toggle-bg);
+      border-radius: 6px;
+      padding: 2px;
+      transition: background 5s cubic-bezier(0.25, 0, 0.25, 1);
+    }
+
+    .lang-btn {
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 5px 10px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s;
+      letter-spacing: 0.02em;
+    }
+
+    .lang-btn.active {
+      background: var(--toggle-active-bg);
+      color: var(--text-primary);
+    }
+
+    .lang-btn:hover:not(.active) {
+      color: var(--text-secondary);
+    }
+
+    /* Theme toggle */
+    .theme-toggle {
+      font-family: var(--mono);
+      font-size: 14px;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: var(--toggle-bg);
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 5s cubic-bezier(0.25, 0, 0.25, 1), color 5s cubic-bezier(0.25, 0, 0.25, 1);
+      line-height: 1;
+    }
+
+    .theme-toggle:hover {
+      color: var(--text-primary);
+    }
+
+    /* ============================
+       HERO
+       ============================ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 80px;
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(ellipse 600px 400px at 50% 40%, var(--accent-glow), transparent);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+    }
+
+    .hero h1 {
+      font-family: var(--mono);
+      font-size: clamp(28px, 6.5vw, 64px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 32px;
+    }
+
+    .hero h1 .accent {
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-family: var(--serif);
+      font-size: clamp(18px, 2.5vw, 22px);
+      color: var(--text-secondary);
+      line-height: 1.5;
+      max-width: 520px;
+      margin-bottom: 56px;
+      font-style: italic;
+    }
+
+    .hero-arrow {
+      display: inline-block;
+      color: var(--text-muted);
+      font-size: 24px;
+      animation: float 2.5s ease-in-out infinite;
+      margin-top: 80px;
+      position: relative;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    .arrow-particle {
+      position: absolute;
+      width: 1.5px;
+      height: 1.5px;
+      border-radius: 50%;
+      background: var(--accent);
+      pointer-events: none;
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+
+    /* ============================
+       GRAIN OVERLAY
+       ============================ */
+    .grain-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+      opacity: var(--grain-opacity);
+      mix-blend-mode: overlay;
+    }
+
+    /* ============================
+       PROBLEM SECTION
+       ============================ */
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      margin-bottom: 40px;
+    }
+
+    .problem h2 {
+      font-family: var(--serif);
+      font-size: clamp(26px, 4vw, 38px);
+      font-weight: 400;
+      line-height: 1.35;
+      color: var(--text-primary);
+      margin-bottom: 36px;
+    }
+
+    .problem-text {
+      color: var(--text-secondary);
+      font-size: 17px;
+      line-height: 1.75;
+      max-width: 580px;
+    }
+
+    .problem-text p + p {
+      margin-top: 24px;
+    }
+
+    /* ============================
+       MANIFESTO (LIGHT CARD)
+       ============================ */
+    .manifesto-section {
+      padding: 140px 0;
+    }
+
+    .manifesto-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: clamp(48px, 7vw, 80px) clamp(36px, 5vw, 64px);
+      position: relative;
+      overflow: hidden;
+      transition: background 5s cubic-bezier(0.25, 0, 0.25, 1);
+    }
+
+    .manifesto-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 200px;
+      height: 200px;
+      background: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='hatch' patternUnits='userSpaceOnUse' width='6' height='6' patternTransform='rotate(45)'%3E%3Cline x1='0' y1='0' x2='0' y2='6' stroke='%23c45a3c' stroke-width='0.5' opacity='0.15'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='200' height='200' fill='url(%23hatch)'/%3E%3C/svg%3E") repeat;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .manifesto-card .section-label {
+      color: var(--accent);
+    }
+
+    .manifesto-card h2 {
+      font-family: var(--mono);
+      font-size: clamp(22px, 3.5vw, 30px);
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1.3;
+      margin-bottom: 40px;
+      letter-spacing: -0.02em;
+    }
+
+    .manifesto-beliefs {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .manifesto-beliefs li {
+      font-family: var(--serif);
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-dark-secondary);
+      padding-left: 24px;
+      position: relative;
+    }
+
+    .manifesto-beliefs li::before {
+      content: '/';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-weight: 700;
+    }
+
+    /* ============================
+       VALUE SECTION
+       ============================ */
+    .value h2 {
+      font-family: var(--serif);
+      font-size: clamp(26px, 4vw, 38px);
+      font-weight: 400;
+      line-height: 1.35;
+      margin-bottom: 56px;
+    }
+
+    .value-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .value-item {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .value-icon {
+      font-family: var(--mono);
+      font-size: 14px;
+      color: var(--accent);
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent-glow);
+      border-radius: 6px;
+      margin-top: 2px;
+    }
+
+    .value-item h3 {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .value-item p {
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ============================
+       AUDIENCE SECTION
+       ============================ */
+    .audience h2 {
+      font-family: var(--serif);
+      font-size: clamp(26px, 4vw, 38px);
+      font-weight: 400;
+      line-height: 1.35;
+      margin-bottom: 48px;
+    }
+
+    .audience-criteria {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+
+    .criteria-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .criteria-check {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .audience-not {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text-muted);
+      border-left: 2px solid var(--audience-border);
+      padding-left: 20px;
+      line-height: 1.8;
+      transition: color 5s cubic-bezier(0.25, 0, 0.25, 1), border-color 5s cubic-bezier(0.25, 0, 0.25, 1);
+    }
+
+    /* ============================
+       CTA / WAITLIST
+       ============================ */
+    .cta {
+      padding: 160px 0;
+      text-align: center;
+      position: relative;
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 80px;
+      background: linear-gradient(to bottom, transparent, var(--accent));
+    }
+
+    .cta h2 {
+      font-family: var(--mono);
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+
+    .cta-sub {
+      font-family: var(--serif);
+      font-size: 18px;
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-bottom: 56px;
+    }
+
+    .waitlist-form {
+      display: flex;
+      gap: 8px;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .waitlist-form input[type="email"] {
+      flex: 1;
+      font-family: var(--mono);
+      font-size: 14px;
+      padding: 14px 18px;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.2s, background 5s cubic-bezier(0.25, 0, 0.25, 1), color 5s cubic-bezier(0.25, 0, 0.25, 1);
+    }
+
+    .waitlist-form input[type="email"]::placeholder {
+      color: var(--text-muted);
+    }
+
+    .waitlist-form input[type="email"]:focus {
+      border-color: var(--accent);
+    }
+
+    .waitlist-form button {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 14px 24px;
+      background: var(--accent);
+      color: var(--bg-primary);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .waitlist-form button:hover {
+      background: var(--accent-light);
+      transform: translateY(-1px);
+    }
+
+    .waitlist-note {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 16px;
+    }
+
+    .form-success {
+      display: none;
+      font-family: var(--mono);
+      font-size: 15px;
+      color: var(--accent);
+    }
+
+    /* ============================
+       FOOTER
+       ============================ */
+    footer {
+      padding: 40px 0;
+      border-top: 1px solid var(--footer-border);
+      text-align: center;
+      transition: border-color 5s cubic-bezier(0.25, 0, 0.25, 1);
+    }
+
+    footer p {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ============================
+       RESPONSIVE
+       ============================ */
+    @media (max-width: 600px) {
+      section {
+        padding: 100px 0;
+      }
+
+      .waitlist-form {
+        flex-direction: column;
+      }
+
+      .waitlist-form button {
+        width: 100%;
+      }
+
+      .manifesto-card {
+        border-radius: 8px;
+      }
+    }
+
+    /* ============================
+       SCROLL ANIMATIONS
+       ============================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ============================
+       CURSOR GLOW (stronger)
+       ============================ */
+    .cursor-glow {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      background: radial-gradient(circle,
+        rgba(196, 90, 60, 0.18) 0%,
+        rgba(196, 90, 60, 0.08) 35%,
+        transparent 70%);
+      transform: translate(-50%, -50%);
+      transition: opacity 0.6s;
+      opacity: 0;
+      will-change: left, top;
+    }
+
+    .cursor-glow.visible {
+      opacity: 1;
+    }
+
+    html[data-theme="light"] .cursor-glow {
+      background: radial-gradient(circle,
+        rgba(196, 90, 60, 0.22) 0%,
+        rgba(196, 90, 60, 0.10) 35%,
+        transparent 70%);
+    }
+
+    @media (max-width: 600px) {
+      .cursor-glow {
+        width: 700px;
+        height: 700px;
+      }
+    }
+
+    /* ============================
+       CURSOR TRAIL (broad fading wake)
+       ============================ */
+    .cursor-trail {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      transform: translate(-50%, -50%);
+      will-change: left, top, opacity;
+      background: radial-gradient(circle, var(--cursor-glow-color) 0%, transparent 70%);
+      transition: opacity 0.8s ease-out;
+    }
+
+    /* ============================
+       ATMOSPHERIC SECTION GLOWS
+       ============================ */
+    .section-atmosphere {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+      z-index: 0;
+    }
+
+    section {
+      position: relative;
+    }
+
+    section > .container {
+      position: relative;
+      z-index: 2;
+    }
+
+    .problem .section-atmosphere {
+      background: radial-gradient(ellipse 80% 60% at 20% 50%,
+        rgba(196, 90, 60, 0.04) 0%, transparent 70%);
+    }
+
+    html[data-theme="light"] .problem .section-atmosphere {
+      background: radial-gradient(ellipse 80% 60% at 20% 50%,
+        rgba(196, 90, 60, 0.05) 0%, transparent 70%);
+    }
+
+    .value .section-atmosphere {
+      background: radial-gradient(ellipse 70% 50% at 80% 40%,
+        rgba(196, 90, 60, 0.05) 0%, transparent 70%);
+    }
+
+    html[data-theme="light"] .value .section-atmosphere {
+      background: radial-gradient(ellipse 70% 50% at 80% 40%,
+        rgba(196, 90, 60, 0.06) 0%, transparent 70%);
+    }
+
+    .audience .section-atmosphere {
+      background: radial-gradient(ellipse 60% 60% at 50% 50%,
+        rgba(196, 90, 60, 0.04) 0%, transparent 70%);
+    }
+
+    .cta .section-atmosphere {
+      background: radial-gradient(ellipse 80% 70% at 50% 60%,
+        rgba(196, 90, 60, 0.07) 0%, transparent 60%);
+    }
+
+    html[data-theme="light"] .cta .section-atmosphere {
+      background: radial-gradient(ellipse 80% 70% at 50% 60%,
+        rgba(196, 90, 60, 0.08) 0%, transparent 60%);
+    }
+
+    .section-atmosphere.active {
+      opacity: 1;
+    }
+
+    /* ============================
+       PARALLAX HEADLINES
+       ============================ */
+    .parallax-headline {
+      will-change: transform;
+    }
+
+    /* ============================
+       MAGNETIC TYPOGRAPHY
+       ============================ */
+    .magnetic-char {
+      display: inline-block;
+      transition: transform 0.3s cubic-bezier(0.25, 0, 0.25, 1);
+      will-change: transform;
+    }
+
+    .magnetic-char.accent {
+      color: var(--accent);
+    }
+
+    /* Smooth lang switch for hero */
+    .hero h1 {
+      transition: opacity 0.15s ease;
+    }
+
+    .hero h1.lang-switching {
+      opacity: 0;
+    }
+
+    .hero-line2 {
+      display: inline;
+      white-space: nowrap;
+    }
+
+    /* Manifesto card hatch pattern - interactive */
+    .manifesto-card .hatch-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      opacity: 0.08;
+      background-size: 8px 8px;
+      background-image: repeating-linear-gradient(
+        45deg,
+        var(--accent) 0,
+        var(--accent) 0.5px,
+        transparent 0.5px,
+        transparent 50%
+      );
+      transition: transform 0.3s ease-out;
+      will-change: transform;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CURSOR GLOW -->
+  <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+  <!-- GRAIN OVERLAY -->
+  <canvas class="grain-overlay" id="grainOverlay" aria-hidden="true"></canvas>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-mark"><canvas id="logoCanvas" width="56" height="56"></canvas></div>
+        <div class="logo-text">bootstrapped<span>,</span> berlin</div>
+      </div>
+      <div class="header-controls">
+        <div class="lang-switch">
+          <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+          <button class="lang-btn" data-lang="de" onclick="setLang('de')">DE</button>
+        </div>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" onclick="toggleTheme()">&#9790;</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-content">
+      <h1>
+        <span data-i18n="hero.title.1">Building alone</span><br>
+        <span class="hero-line2"><span data-i18n="hero.title.2">is a </span><span class="accent" data-i18n="hero.title.3">choice.</span></span>
+      </h1>
+      <p class="hero-sub" data-i18n="hero.sub">
+        A curated network for founders who build real businesses in Berlin &mdash; without asking for permission.
+      </p>
+      <div class="hero-arrow" id="heroArrow">&darr;</div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="problem">
+    <div class="section-atmosphere"></div>
+    <div class="container reveal">
+      <div class="section-label" data-i18n="problem.label">// the reality</div>
+      <h2 class="parallax-headline" data-i18n="problem.h2">Berlin has 10,000 startup events. None of them are for you.</h2>
+      <div class="problem-text">
+        <p data-i18n="problem.p1">
+          You're not raising a round. You're not looking for a co-founder speed date. You're not interested in another panel about "the future of AI" by people who've never shipped a product.
+        </p>
+        <p data-i18n="problem.p2">
+          You're building something real. With revenue. With customers. With your own money and your own rules. And the truth is &mdash; most of the time, you're doing it completely alone.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MANIFESTO -->
+  <section class="manifesto-section">
+    <div class="container">
+      <div class="manifesto-card reveal" id="manifestoCard">
+        <div class="hatch-overlay" id="hatchOverlay"></div>
+        <div class="section-label" data-i18n="manifesto.label">// what we believe</div>
+        <h2 data-i18n="manifesto.h2">bootstrapped, berlin is for founders who chose a different path.</h2>
+        <ul class="manifesto-beliefs">
+          <li data-i18n="manifesto.b1">Revenue is the best funding round.</li>
+          <li data-i18n="manifesto.b2">You don't need permission to build something that matters.</li>
+          <li data-i18n="manifesto.b3">A small, profitable business beats a large, unprofitable one.</li>
+          <li data-i18n="manifesto.b4">Berlin is not just a startup city &mdash; it's where independent builders thrive.</li>
+          <li data-i18n="manifesto.b5">The best network is a small room of people who get it.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUE -->
+  <section class="value">
+    <div class="section-atmosphere"></div>
+    <div class="container reveal">
+      <div class="section-label" data-i18n="value.label">// what you get</div>
+      <h2 class="parallax-headline" data-i18n="value.h2">Less noise. More signal.</h2>
+      <div class="value-grid">
+        <div class="value-item">
+          <div class="value-icon">&gt;_</div>
+          <div>
+            <h3 data-i18n="value.v1.h">Honest conversations</h3>
+            <p data-i18n="value.v1.p">No pitching, no posturing. Real talk about what's working, what's not, and what keeps you up at night.</p>
+          </div>
+        </div>
+        <div class="value-item">
+          <div class="value-icon">++</div>
+          <div>
+            <h3 data-i18n="value.v2.h">Curated peers</h3>
+            <p data-i18n="value.v2.p">Every member is building a real, revenue-generating business in Berlin. No hobbyists, no "idea guys."</p>
+          </div>
+        </div>
+        <div class="value-item">
+          <div class="value-icon">{}</div>
+          <div>
+            <h3 data-i18n="value.v3.h">Tactical knowledge</h3>
+            <p data-i18n="value.v3.p">Learn from people who've solved the exact problems you're facing right now. Skip years of trial and error.</p>
+          </div>
+        </div>
+        <div class="value-item">
+          <div class="value-icon">::</div>
+          <div>
+            <h3 data-i18n="value.v4.h">Berlin-local</h3>
+            <p data-i18n="value.v4.p">Real meetups, real coffee, real handshakes. This is not another Slack group.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AUDIENCE -->
+  <section class="audience">
+    <div class="section-atmosphere"></div>
+    <div class="container reveal">
+      <div class="section-label" data-i18n="audience.label">// is this you?</div>
+      <h2 class="parallax-headline" data-i18n="audience.h2">This is for the ones who build.</h2>
+      <div class="audience-criteria">
+        <div class="criteria-item">
+          <span class="criteria-check">[x]</span>
+          <span data-i18n="audience.c1">You run a bootstrapped or self-funded business</span>
+        </div>
+        <div class="criteria-item">
+          <span class="criteria-check">[x]</span>
+          <span data-i18n="audience.c2">You're based in Berlin (or close enough)</span>
+        </div>
+        <div class="criteria-item">
+          <span class="criteria-check">[x]</span>
+          <span data-i18n="audience.c3">You have paying customers or real revenue</span>
+        </div>
+        <div class="criteria-item">
+          <span class="criteria-check">[x]</span>
+          <span data-i18n="audience.c4">You want to connect, not to network</span>
+        </div>
+      </div>
+      <div class="audience-not" data-i18n="audience.not">
+        // Not for: Pre-idea founders, VC-backed startups looking for "bootstrapped vibes",<br>
+        // or anyone whose LinkedIn bio says "serial entrepreneur."
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="section-atmosphere"></div>
+    <div class="container reveal">
+      <h2 class="parallax-headline" data-i18n="cta.h2">Get in early.</h2>
+      <p class="cta-sub" data-i18n="cta.sub">We're launching soon. Leave your email and be the first to know.</p>
+      <form class="waitlist-form" id="waitlistForm">
+        <input type="email" name="email" placeholder="you@company.com" required>
+        <button type="submit" data-i18n="cta.btn">Join waitlist</button>
+      </form>
+      <p class="waitlist-note" data-i18n="cta.note">No spam. No pitch decks. Just one email when we launch.</p>
+      <p class="form-success" id="formSuccess" data-i18n="cta.success">You're on the list. We'll be in touch.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <p>bootstrapped, berlin &mdash; 2025</p>
+    </div>
+  </footer>
+
+  <script>
+    /* ============================
+       I18N
+       ============================ */
+    const translations = {
+      en: {
+        'hero.title.1': 'Building alone',
+        'hero.title.2': 'is a ',
+        'hero.title.3': 'choice.',
+        'hero.sub': 'A curated network for founders who build real businesses in Berlin \u2014 without asking for permission.',
+        'problem.label': '// the reality',
+        'problem.h2': 'Berlin has 10,000 startup events. None of them are for you.',
+        'problem.p1': 'You\u2019re not raising a round. You\u2019re not looking for a co-founder speed date. You\u2019re not interested in another panel about \u201Cthe future of AI\u201D by people who\u2019ve never shipped a product.',
+        'problem.p2': 'You\u2019re building something real. With revenue. With customers. With your own money and your own rules. And the truth is \u2014 most of the time, you\u2019re doing it completely alone.',
+        'manifesto.label': '// what we believe',
+        'manifesto.h2': 'bootstrapped, berlin is for founders who chose a different path.',
+        'manifesto.b1': 'Revenue is the best funding round.',
+        'manifesto.b2': 'You don\u2019t need permission to build something that matters.',
+        'manifesto.b3': 'A small, profitable business beats a large, unprofitable one.',
+        'manifesto.b4': 'Berlin is not just a startup city \u2014 it\u2019s where independent builders thrive.',
+        'manifesto.b5': 'The best network is a small room of people who get it.',
+        'value.label': '// what you get',
+        'value.h2': 'Less noise. More signal.',
+        'value.v1.h': 'Honest conversations',
+        'value.v1.p': 'No pitching, no posturing. Real talk about what\u2019s working, what\u2019s not, and what keeps you up at night.',
+        'value.v2.h': 'Curated peers',
+        'value.v2.p': 'Every member is building a real, revenue-generating business in Berlin. No hobbyists, no \u201Cidea guys.\u201D',
+        'value.v3.h': 'Tactical knowledge',
+        'value.v3.p': 'Learn from people who\u2019ve solved the exact problems you\u2019re facing right now. Skip years of trial and error.',
+        'value.v4.h': 'Berlin-local',
+        'value.v4.p': 'Real meetups, real coffee, real handshakes. This is not another Slack group.',
+        'audience.label': '// is this you?',
+        'audience.h2': 'This is for the ones who build.',
+        'audience.c1': 'You run a bootstrapped or self-funded business',
+        'audience.c2': 'You\u2019re based in Berlin (or close enough)',
+        'audience.c3': 'You have paying customers or real revenue',
+        'audience.c4': 'You want to connect, not to network',
+        'audience.not': '// Not for: Pre-idea founders, VC-backed startups looking for \u201Cbootstrapped vibes\u201D,\n// or anyone whose LinkedIn bio says \u201Cserial entrepreneur.\u201D',
+        'cta.h2': 'Get in early.',
+        'cta.sub': 'We\u2019re launching soon. Leave your email and be the first to know.',
+        'cta.btn': 'Join waitlist',
+        'cta.note': 'No spam. No pitch decks. Just one email when we launch.',
+        'cta.success': 'You\u2019re on the list. We\u2019ll be in touch.'
+      },
+      de: {
+        'hero.title.1': 'Alleine bauen',
+        'hero.title.2': 'ist eine ',
+        'hero.title.3': 'Entscheidung.',
+        'hero.sub': 'Ein kuratiertes Netzwerk f\u00FCr Gr\u00FCnder, die in Berlin echte Unternehmen aufbauen \u2014 ohne um Erlaubnis zu fragen.',
+        'problem.label': '// die Realit\u00E4t',
+        'problem.h2': 'Berlin hat 10.000 Startup-Events. Keins davon ist f\u00FCr dich.',
+        'problem.p1': 'Du raised keine Runde. Du suchst kein Co-Founder Speed-Dating. Du hast kein Interesse an noch einem Panel \u00FCber \u201Edie Zukunft von AI\u201C von Leuten, die noch nie ein Produkt ausgeliefert haben.',
+        'problem.p2': 'Du baust etwas Echtes. Mit Umsatz. Mit Kunden. Mit deinem eigenen Geld und deinen eigenen Regeln. Und die Wahrheit ist \u2014 meistens machst du es komplett allein.',
+        'manifesto.label': '// woran wir glauben',
+        'manifesto.h2': 'bootstrapped, berlin ist f\u00FCr Gr\u00FCnder, die einen anderen Weg gew\u00E4hlt haben.',
+        'manifesto.b1': 'Umsatz ist die beste Finanzierungsrunde.',
+        'manifesto.b2': 'Du brauchst keine Erlaubnis, um etwas Bedeutendes zu bauen.',
+        'manifesto.b3': 'Ein kleines, profitables Unternehmen schl\u00E4gt ein gro\u00DFes, unprofitables.',
+        'manifesto.b4': 'Berlin ist nicht nur eine Startup-Stadt \u2014 es ist der Ort, an dem unabh\u00E4ngige Macher gedeihen.',
+        'manifesto.b5': 'Das beste Netzwerk ist ein kleiner Raum voller Leute, die es verstehen.',
+        'value.label': '// was du bekommst',
+        'value.h2': 'Weniger Rauschen. Mehr Signal.',
+        'value.v1.h': 'Ehrliche Gespr\u00E4che',
+        'value.v1.p': 'Kein Pitching, kein Posing. Echte Gespr\u00E4che dar\u00FCber, was funktioniert, was nicht \u2014 und was dich nachts wach h\u00E4lt.',
+        'value.v2.h': 'Kuratierte Peers',
+        'value.v2.p': 'Jedes Mitglied baut ein echtes, umsatzgenerierendes Unternehmen in Berlin. Keine Hobbyisten, keine \u201EIdea Guys.\u201C',
+        'value.v3.h': 'Taktisches Wissen',
+        'value.v3.p': 'Lerne von Leuten, die genau die Probleme gel\u00F6st haben, vor denen du gerade stehst. \u00DCberspringe Jahre von Trial and Error.',
+        'value.v4.h': 'Berlin-lokal',
+        'value.v4.p': 'Echte Treffen, echter Kaffee, echter Handschlag. Das ist keine weitere Slack-Gruppe.',
+        'audience.label': '// bist du das?',
+        'audience.h2': 'Das ist f\u00FCr die, die bauen.',
+        'audience.c1': 'Du f\u00FChrst ein bootstrapped oder eigenfinanziertes Unternehmen',
+        'audience.c2': 'Du bist in Berlin (oder nah genug)',
+        'audience.c3': 'Du hast zahlende Kunden oder echten Umsatz',
+        'audience.c4': 'Du willst dich verbinden, nicht networken',
+        'audience.not': '// Nicht f\u00FCr: Pre-Idea-Gr\u00FCnder, VC-finanzierte Startups auf der Suche nach \u201Ebootstrapped Vibes\u201C,\n// oder jeden, dessen LinkedIn-Bio \u201ESerial Entrepreneur\u201C sagt.',
+        'cta.h2': 'Sei fr\u00FCh dabei.',
+        'cta.sub': 'Wir starten bald. Hinterlass deine E-Mail und erfahre es als Erste/r.',
+        'cta.btn': 'Auf die Warteliste',
+        'cta.note': 'Kein Spam. Keine Pitch Decks. Nur eine E-Mail, wenn wir starten.',
+        'cta.success': 'Du bist auf der Liste. Wir melden uns.'
+      }
+    };
+
+    function setLang(lang) {
+      document.documentElement.setAttribute('data-lang', lang);
+      document.documentElement.setAttribute('lang', lang);
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) {
+          if (el.tagName === 'INPUT') {
+            el.placeholder = translations[lang][key];
+          } else if (key === 'audience.not') {
+            el.innerHTML = translations[lang][key].replace(/\n/g, '<br>');
+          } else {
+            el.textContent = translations[lang][key];
+          }
+        }
+      });
+      try { localStorage.setItem('bb_lang', lang); } catch(e) {}
+    }
+
+    (function() {
+      const stored = localStorage.getItem('bb_lang');
+      if (stored) { setLang(stored); }
+      else {
+        const bl = (navigator.language || navigator.userLanguage || 'en').slice(0, 2);
+        setLang(bl === 'de' ? 'de' : 'en');
+      }
+    })();
+
+    /* ============================
+       THEME (DARK / LIGHT)
+       ============================ */
+    function applyTheme(theme, instant) {
+      const html = document.documentElement;
+      if (instant) {
+        html.style.transition = 'none';
+        document.body.style.transition = 'none';
+        void html.offsetHeight;
+      }
+      html.setAttribute('data-theme', theme);
+      document.getElementById('themeToggle').innerHTML = theme === 'light' ? '&#9788;' : '&#9790;';
+      if (instant) {
+        requestAnimationFrame(function() {
+          html.style.transition = '';
+          document.body.style.transition = '';
+        });
+      }
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      applyTheme(next, false);
+      try { localStorage.setItem('bb_theme', next); } catch(e) {}
+    }
+
+    (function() {
+      const stored = localStorage.getItem('bb_theme');
+      if (stored) { applyTheme(stored, true); }
+      else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) { applyTheme('light', true); }
+      else { applyTheme('dark', true); }
+      window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function(e) {
+        if (!localStorage.getItem('bb_theme')) { applyTheme(e.matches ? 'light' : 'dark', false); }
+      });
+    })();
+
+    /* ============================
+       SCROLL REVEAL
+       ============================ */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    /* ============================
+       HEADER: Glass fade-in on scroll
+       ============================ */
+    (function() {
+      const header = document.querySelector('header');
+      let scrolled = false;
+
+      function checkHeader() {
+        const sy = window.scrollY;
+        if (sy > 20 && !scrolled) {
+          header.classList.add('scrolled');
+          scrolled = true;
+        } else if (sy <= 20 && scrolled) {
+          header.classList.remove('scrolled');
+          scrolled = false;
+        }
+      }
+
+      window.addEventListener('scroll', checkHeader, { passive: true });
+      checkHeader();
+    })();
+
+    /* ============================
+       ARROW: Downward particle stream
+       ============================ */
+    (function() {
+      const arrow = document.getElementById('heroArrow');
+      if (!arrow) return;
+      const POOL = 20;
+      const particles = [];
+
+      for (let i = 0; i < POOL; i++) {
+        const p = document.createElement('div');
+        p.className = 'arrow-particle';
+        arrow.appendChild(p);
+        particles.push(p);
+      }
+
+      let idx = 0;
+      function spawnParticle() {
+        const p = particles[idx % POOL];
+        idx++;
+        const startX = -5 + Math.random() * 10;
+        const drift = -4 + Math.random() * 8;
+        const duration = 600 + Math.random() * 500;
+
+        p.style.transition = 'none';
+        p.style.left = 'calc(50% + ' + startX + 'px)';
+        p.style.top = '-6px';
+        p.style.opacity = (0.3 + Math.random() * 0.4).toFixed(2);
+        p.style.transform = 'translateY(0)';
+        void p.offsetWidth;
+
+        p.style.transition = 'transform ' + duration + 'ms cubic-bezier(0.4, 0, 1, 1), opacity ' + duration + 'ms ease-in';
+        p.style.transform = 'translate(' + drift + 'px, ' + (30 + Math.random() * 25) + 'px)';
+        p.style.opacity = '0';
+      }
+
+      setInterval(spawnParticle, 120);
+    })();
+
+    /* ============================
+       GRAIN: Subtle full-page grain (canvas)
+       ============================ */
+    (function() {
+      const canvas = document.getElementById('grainOverlay');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const S = 256;
+      canvas.width = S;
+      canvas.height = S;
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+
+      const img = ctx.createImageData(S, S);
+      const data = img.data;
+
+      let lastDraw = 0;
+      function drawGrain(time) {
+        if (time - lastDraw > 80) { // ~12fps
+          for (let i = 0; i < data.length; i += 4) {
+            const v = Math.random() * 255;
+            data[i] = v;
+            data[i+1] = v;
+            data[i+2] = v;
+            data[i+3] = 255;
+          }
+          ctx.putImageData(img, 0, 0);
+          lastDraw = time;
+        }
+        requestAnimationFrame(drawGrain);
+      }
+      requestAnimationFrame(drawGrain);
+    })();
+
+    /* ============================
+       LOGO: Noise sphere (canvas) — accent colored
+       ============================ */
+    (function() {
+      const c = document.getElementById('logoCanvas');
+      const ctx = c.getContext('2d');
+      const S = 56;
+      const img = ctx.createImageData(S, S);
+      const data = img.data;
+      const cx = S / 2, cy = S / 2, R = S * 0.42;
+
+      function getAccentRGB() {
+        const style = getComputedStyle(document.documentElement);
+        const hex = style.getPropertyValue('--accent').trim() || '#c45a3c';
+        const m = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+        return m ? [parseInt(m[1],16), parseInt(m[2],16), parseInt(m[3],16)] : [196, 90, 60];
+      }
+
+      function drawLogo() {
+        const accent = getAccentRGB();
+
+        for (let y = 0; y < S; y++) {
+          for (let x = 0; x < S; x++) {
+            const i = (y * S + x) * 4;
+            const dx = x - cx, dy = y - cy;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+
+            if (dist > R) {
+              data[i] = 0; data[i+1] = 0; data[i+2] = 0; data[i+3] = 0;
+            } else {
+              const density = 1 - (dist / R);
+              const sphere = density * density * 1.4;
+              const noise = Math.random();
+
+              if (noise < sphere) {
+                data[i]   = accent[0];
+                data[i+1] = accent[1];
+                data[i+2] = accent[2];
+                data[i+3] = 255;
+              } else {
+                data[i] = 0; data[i+1] = 0; data[i+2] = 0; data[i+3] = 0;
+              }
+            }
+          }
+        }
+        ctx.putImageData(img, 0, 0);
+      }
+
+      let lastDraw = 0;
+      function tick(time) {
+        if (time - lastDraw > 83) {
+          drawLogo();
+          lastDraw = time;
+        }
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    })();
+
+    /* Accent color is static — defined in CSS variables, no scroll shift */
+
+    /* ============================
+       CURSOR GLOW + TRAIL + INTERACTIVE HATCH
+       ============================ */
+    (function() {
+      const glow = document.getElementById('cursorGlow');
+      const card = document.getElementById('manifestoCard');
+      const hatch = document.getElementById('hatchOverlay');
+      let mx = 0, my = 0, gx = 0, gy = 0;
+      const isTouch = 'ontouchstart' in window;
+
+      function lerp(a, b, t) { return a + (b - a) * t; }
+
+      // --- Trail system: pool of broad fading glow ghosts ---
+      const POOL_SIZE = 12;
+      const trailPool = [];
+      let trailIndex = 0;
+      let lastTrailX = 0, lastTrailY = 0;
+      const TRAIL_SPAWN_DIST = 30; // spawn a new ghost every 30px of movement
+
+      if (!isTouch) {
+        for (let i = 0; i < POOL_SIZE; i++) {
+          const el = document.createElement('div');
+          el.className = 'cursor-trail';
+          el.style.width = '350px';
+          el.style.height = '350px';
+          el.style.opacity = '0';
+          document.body.appendChild(el);
+          trailPool.push(el);
+        }
+      }
+
+      function spawnTrailGhost(x, y) {
+        const el = trailPool[trailIndex % POOL_SIZE];
+        trailIndex++;
+        // Reset: make visible instantly, then fade
+        el.style.transition = 'none';
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        el.style.opacity = '0.7';
+        // Force reflow then let CSS transition fade it out
+        void el.offsetWidth;
+        el.style.transition = 'opacity 1.2s ease-out';
+        el.style.opacity = '0';
+      }
+
+      function tick() {
+        gx = lerp(gx, mx, 0.06);
+        gy = lerp(gy, my, 0.06);
+        glow.style.left = gx + 'px';
+        glow.style.top = gy + 'px';
+
+        // Spawn trail ghosts based on distance moved
+        if (!isTouch) {
+          const dx = gx - lastTrailX;
+          const dy = gy - lastTrailY;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist > TRAIL_SPAWN_DIST) {
+            spawnTrailGhost(gx, gy);
+            lastTrailX = gx;
+            lastTrailY = gy;
+          }
+        }
+
+        if (card && hatch) {
+          const r = card.getBoundingClientRect();
+          const cx = (mx - r.left) / r.width - 0.5;
+          const cy = (my - r.top) / r.height - 0.5;
+          hatch.style.transform = 'translate(' + (cx * 8) + 'px, ' + (cy * 8) + 'px)';
+        }
+
+        requestAnimationFrame(tick);
+      }
+
+      if (isTouch) {
+        mx = window.innerWidth * 0.4;
+        my = window.innerHeight * 0.5;
+        gx = mx; gy = my;
+        glow.classList.add('visible');
+        glow.style.width = '700px';
+        glow.style.height = '700px';
+
+        window.addEventListener('scroll', function() {
+          const sy = window.scrollY;
+          my = (window.innerHeight * 0.45) + Math.sin(sy * 0.003) * 80;
+          mx = (window.innerWidth * 0.4) + Math.sin(sy * 0.002) * 60;
+        }, { passive: true });
+        tick();
+      } else {
+        glow.classList.add('visible');
+        mx = window.innerWidth / 2;
+        my = window.innerHeight / 2;
+        gx = mx; gy = my;
+        lastTrailX = mx;
+        lastTrailY = my;
+        tick();
+        document.addEventListener('mousemove', function(e) {
+          mx = e.clientX;
+          my = e.clientY;
+        });
+      }
+    })();
+
+    /* ============================
+       ATMOSPHERIC SECTION GLOWS (scroll-driven)
+       ============================ */
+    (function() {
+      const sectionObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          const atmo = entry.target.querySelector('.section-atmosphere');
+          if (atmo) {
+            if (entry.isIntersecting) {
+              atmo.classList.add('active');
+            } else {
+              atmo.classList.remove('active');
+            }
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '-8% 0px -8% 0px' });
+
+      document.querySelectorAll('section').forEach(function(sec) {
+        if (sec.querySelector('.section-atmosphere')) {
+          sectionObserver.observe(sec);
+        }
+      });
+    })();
+
+    /* ============================
+       PARALLAX DEPTH ON HEADLINES
+       ============================ */
+    (function() {
+      const headlines = document.querySelectorAll('.parallax-headline');
+      if (!headlines.length) return;
+      const isTouch = 'ontouchstart' in window;
+
+      function updateParallax() {
+        const scrollY = window.scrollY;
+        const viewH = window.innerHeight;
+
+        headlines.forEach(function(h) {
+          const rect = h.getBoundingClientRect();
+          const center = rect.top + rect.height / 2;
+          // How far from viewport center (-1 to 1)
+          const offset = (center - viewH / 2) / viewH;
+          // Headlines move slightly slower (opposite direction = depth illusion)
+          const parallax = offset * (isTouch ? -8 : -15);
+          h.style.transform = 'translateY(' + parallax + 'px)';
+        });
+      }
+
+      window.addEventListener('scroll', updateParallax, { passive: true });
+      updateParallax();
+    })();
+
+    /* ============================
+       MAGNETIC TYPOGRAPHY (Hero H1)
+       ============================ */
+    (function() {
+      const isTouch = 'ontouchstart' in window;
+      if (isTouch) return; // Skip on mobile
+
+      const heroH1 = document.querySelector('.hero h1');
+      if (!heroH1) return;
+
+      // Wrap each character in a span (preserve existing spans)
+      function wrapChars(el) {
+        const spans = el.querySelectorAll('[data-i18n]');
+        spans.forEach(function(span) {
+          const text = span.textContent;
+          const isAccent = span.classList.contains('accent');
+          span.innerHTML = '';
+          for (let i = 0; i < text.length; i++) {
+            const ch = document.createElement('span');
+            ch.className = 'magnetic-char' + (isAccent ? ' accent' : '');
+            ch.textContent = text[i] === ' ' ? '\u00A0' : text[i];
+            span.appendChild(ch);
+          }
+        });
+      }
+
+      wrapChars(heroH1);
+
+      let hmx = window.innerWidth / 2;
+      let hmy = window.innerHeight / 2;
+
+      document.addEventListener('mousemove', function(e) {
+        hmx = e.clientX;
+        hmy = e.clientY;
+      });
+
+      function animateChars() {
+        const chars = heroH1.querySelectorAll('.magnetic-char');
+        chars.forEach(function(ch) {
+          const rect = ch.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+          const dx = hmx - cx;
+          const dy = hmy - cy;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const maxDist = 300;
+
+          if (dist < maxDist) {
+            const force = (1 - dist / maxDist) * 3;
+            const tx = (dx / dist) * force;
+            const ty = (dy / dist) * force;
+            ch.style.transform = 'translate(' + tx + 'px, ' + ty + 'px)';
+          } else {
+            ch.style.transform = 'translate(0, 0)';
+          }
+        });
+        requestAnimationFrame(animateChars);
+      }
+
+      requestAnimationFrame(animateChars);
+
+      // Re-wrap on language change with smooth transition
+      const origSetLang = window.setLang;
+      if (origSetLang) {
+        window.setLang = function(lang) {
+          // Fade out hero h1
+          heroH1.classList.add('lang-switching');
+          setTimeout(function() {
+            origSetLang(lang);
+            // Re-wrap chars after i18n update
+            requestAnimationFrame(function() {
+              wrapChars(heroH1);
+              // Fade back in
+              heroH1.classList.remove('lang-switching');
+            });
+          }, 150);
+        };
+      }
+    })();
+
+    /* ============================
+       WAITLIST FORM
+       ============================ */
+    document.getElementById('waitlistForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = this.querySelector('input[type="email"]').value;
+      // TODO: Replace with your actual form endpoint
+      console.log('Waitlist signup:', email);
+      this.style.display = 'none';
+      document.getElementById('formSuccess').style.display = 'block';
+      document.querySelector('.waitlist-note').style.display = 'none';
+    });
+  </script>
+
+</body>
+</html>
